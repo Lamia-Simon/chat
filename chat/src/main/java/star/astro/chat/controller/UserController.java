@@ -2,7 +2,7 @@ package star.astro.chat.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.*;
-import star.astro.chat.model.wrapper.Chatroom.Chatroom;
+import star.astro.chat.model.wrapper.chatroom.Chatroom;
 import star.astro.chat.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
