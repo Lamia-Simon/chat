@@ -1,4 +1,4 @@
-package star.astro.chat.model.wrapper;
+package star.astro.chat.model.wrapper.Chatroom;
 
 public abstract class Chatroom {
 
