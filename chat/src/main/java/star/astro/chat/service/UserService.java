@@ -6,6 +6,7 @@ import star.astro.chat.model.mongodb.User;
 import star.astro.chat.model.mongodb.link.FriendLink;
 import star.astro.chat.model.mongodb.link.GroupChatUserLink;
 import star.astro.chat.model.wrapper.Chatroom;
+import star.astro.chat.model.wrapper.ChatroomFactory;
 import star.astro.chat.model.wrapper.ChatroomType;
 import star.astro.chat.repository.FriendLinkRepository;
 import star.astro.chat.repository.GroupChatRepository;
@@ -90,7 +91,7 @@ public class UserService {
             String username1 = friendLink.getUsername1();
             User user = userRepository.findUserByName(username1);
             String chatroomId = friendLink.getId();
-            Chatroom chatroom = new Chatroom(chatroomId, user.getName(), ChatroomType.PRIVATECHAT.getValue());
+            Chatroom chatroom = ChatroomFactory.getChatroom(chatroomId, user.getName(), ChatroomType.PRIVATECHAT);
             chatrooms.add(chatroom);
         }
 
@@ -100,7 +101,7 @@ public class UserService {
             String username0 = friendLink.getUsername0();
             User user = userRepository.findUserByName(username0);
             String chatroomId = friendLink.getId();
-            Chatroom chatroom = new Chatroom(chatroomId, user.getName(), ChatroomType.PRIVATECHAT.getValue());
+            Chatroom chatroom = ChatroomFactory.getChatroom(chatroomId, user.getName(), ChatroomType.PRIVATECHAT);
             chatrooms.add(chatroom);
         }
 
@@ -114,7 +115,7 @@ public class UserService {
             String chatroomId = groupChatUserLink.getChatroomId();
             GroupChat groupChat = groupChatRepository.findGroupChatById(chatroomId);
             String chatroomName = groupChat.getName();
-            Chatroom chatroom = new Chatroom(chatroomId, chatroomName, ChatroomType.GROUPCHAT.getValue());
+            Chatroom chatroom = ChatroomFactory.getChatroom(chatroomId, chatroomName, ChatroomType.GROUPCHAT);
             chatrooms.add(chatroom);
         }
         return chatrooms;

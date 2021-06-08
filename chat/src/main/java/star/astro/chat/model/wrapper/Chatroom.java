@@ -1,16 +1,10 @@
 package star.astro.chat.model.wrapper;
 
-public class Chatroom {
+public abstract class Chatroom {
 
-    private String chatroomId;
-    private String name; // name of friend / chatroom
-    private int type;
-
-    public Chatroom(String chatroomId, String name, int type) {
-        this.chatroomId = chatroomId;
-        this.name = name;
-        this.type = type;
-    }
+    protected String chatroomId;
+    protected String name; // name of friend / chatroom
+    protected int type;
 
     public String getChatroomId() {
         return chatroomId;
