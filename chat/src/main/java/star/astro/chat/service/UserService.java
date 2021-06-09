@@ -5,6 +5,7 @@ import star.astro.chat.model.mongodb.GroupChat;
 import star.astro.chat.model.mongodb.User;
 import star.astro.chat.model.mongodb.link.FriendLink;
 import star.astro.chat.model.mongodb.link.GroupChatUserLink;
+import star.astro.chat.model.mongodb.link.LinkAdapter;
 import star.astro.chat.model.wrapper.chatroom.Chatroom;
 import star.astro.chat.model.wrapper.chatroom.ChatroomFactory;
 import star.astro.chat.model.wrapper.chatroom.ChatroomType;
@@ -85,20 +86,20 @@ public class UserService {
     public List<Chatroom> getPrivateChatrooms(String username) {
         List<Chatroom> chatrooms = new LinkedList<>();
 
-        //get friends as user0
+        // get friends as user0
         List<FriendLink> friendLinks = friendLinkRepository.findFriendLinkByUsername0(username);
         for (FriendLink friendLink : friendLinks) {
-            String username1 = friendLink.getUsername1();
+            String username1 = friendLink.getGuestId();
             User user = userRepository.findUserByName(username1);
             String chatroomId = friendLink.getId();
             Chatroom chatroom = ChatroomFactory.getChatroom(chatroomId, user.getName(), ChatroomType.PRIVATECHAT);
             chatrooms.add(chatroom);
         }
 
-        //get friends as user1
+        // get friends as user1
         friendLinks = friendLinkRepository.findFriendLinkByUsername1(username);
         for (FriendLink friendLink : friendLinks) {
-            String username0 = friendLink.getUsername0();
+            String username0 = friendLink.getHostId();
             User user = userRepository.findUserByName(username0);
             String chatroomId = friendLink.getId();
             Chatroom chatroom = ChatroomFactory.getChatroom(chatroomId, user.getName(), ChatroomType.PRIVATECHAT);
@@ -112,7 +113,8 @@ public class UserService {
         List<Chatroom> chatrooms = new LinkedList<>();
         List<GroupChatUserLink> groupChatUserLinks = groupChatUserLinkRepository.findGroupChatUserLinkByUsername(username);
         for (GroupChatUserLink groupChatUserLink : groupChatUserLinks) {
-            String chatroomId = groupChatUserLink.getChatroomId();
+            LinkAdapter linkAdapter = new LinkAdapter(groupChatUserLink);
+            String chatroomId = linkAdapter.getHostId();
             GroupChat groupChat = groupChatRepository.findGroupChatById(chatroomId);
             String chatroomName = groupChat.getName();
             Chatroom chatroom = ChatroomFactory.getChatroom(chatroomId, chatroomName, ChatroomType.GROUPCHAT);
