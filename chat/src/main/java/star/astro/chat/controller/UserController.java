@@ -82,4 +82,20 @@ public class UserController {
         return userService.getUserChatrooms(username);
     }
 
+    @PostMapping("/user/friend/delete")
+    public JSONObject deleteFriend(@RequestParam("user") String user, @RequestParam("friend") String friend){
+        JSONObject ret = new JSONObject();
+        userService.deleteFriend(user, friend);
+        ret.put("success", true);
+        return ret;
+    }
+
+    @PostMapping("/user/group/leave")
+    public JSONObject exitGroup(@RequestParam("user") String user, @RequestParam("groupId") String group){
+        JSONObject ret = new JSONObject();
+        userService.exitGroup(user, group);
+        ret.put("success", true);
+        return ret;
+    }
+
 }

@@ -13,4 +13,5 @@ public interface FriendLinkRepository extends MongoRepository<FriendLink, String
 
     List<FriendLink> findFriendLinkByUsername1(String username1);
 
+    void deleteByUsername0AndUsername1(String User, String Friend);
 }

@@ -150,4 +150,12 @@ public class UserService {
         return chatrooms;
     }
 
+    public void deleteFriend(String user, String friend){
+        friendLinkRepository.deleteByUsername0AndUsername1(user, friend);
+    }
+
+    public void exitGroup(String user, String id){
+        groupChatUserLinkRepository.deleteByChatroomIdAndUsername(id, user);
+    }
+
 }
