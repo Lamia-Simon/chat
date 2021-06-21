@@ -14,21 +14,32 @@ import {
     TableContainer,
     TextField,
 } from "@material-ui/core";
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import ChatIcon from '@material-ui/icons/Chat';
+import ListIcon from '@material-ui/icons/List';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import Icon from '@material-ui/core/Icon';
 import MessageBox from "./components/message/Message";
 import Panels from "./components/panels/Panels";
 
 const appBarHeight = 80;
 const drawerWidth = "26%";
-const middleSectionUnifiedHeight = 401; // very hacky
+const middleSectionUnifiedHeight = 545; // very hacky
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex",
     },
     appBar: {
+        display: "flex",
         width: `calc(100% - ${drawerWidth})`,
         height: appBarHeight,
         marginLeft: drawerWidth,
+    },
+    logOut:{
+        display: "flex",
+        alignItems: "center",
+        marginLeft:"auto"
     },
     chatroomName: {
         height: 80,
@@ -37,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
     },
     drawer: {
         width: drawerWidth,
+        height:"auto",
         flexShrink: 0,
     },
     drawerPaper: {
@@ -48,15 +60,35 @@ const useStyles = makeStyles((theme) => ({
         height: 80,
         display: "flex",
         alignItems: "center",
-        borderTop: "1px solid black",
+        //borderTop: "1px solid black",
     },
     title: {
         marginLeft: 40,
         fontSize: 40,
     },
+    listContainer:{
+        display:'flex',
+        //alignItems: "center",
+        justifyContent:'space-around',
+        width: "auto",
+        //height: middleSectionUnifiedHeight,
+    },
+    iconContainer:{
+        display: "flex",
+        //alignItems: "center",
+        width:50,
+        height:"100%",
+    },
     forTableContainer: {
+        display: "flex",
+        //alignItems: "center",
+        //maxHeight: middleSectionUnifiedHeight, // very hacky
+        height:"100%",
+        backgroundColor: "sandyBrown",
+    },
+    forTableContainerRight: {
         width: "100%",
-        maxHeight: middleSectionUnifiedHeight, // very hacky
+        //maxHeight: middleSectionUnifiedHeight, // very hacky
     },
     panelsContainer: {
         display: "flex",
@@ -128,6 +160,7 @@ var stompClient = null;
 export default function Chat(props) {
     const classes = useStyles();
 
+    const setPage = props.setPage;
     const username = props.user.name;
     const [chatText, setChatText] = useState("");
     const [rooms, setRooms] = useState([]);
@@ -150,7 +183,7 @@ export default function Chat(props) {
             });
         });
     };
-
+    // eslint-disable-next-line
     useEffect(setChatrooms, []); // set chatrooms after entering the chat page
 
     useEffect(() => {
@@ -164,13 +197,14 @@ export default function Chat(props) {
             }
             connect();
         }
+        // eslint-disable-next-line
     }, [rooms]);
 
     const refreshChatroomMessages = () => {
         let messages = findChatMessages(activeChat.name);
         setCurrentChatroomMessages(messages);
     };
-
+    // eslint-disable-next-line
     useEffect(refreshChatroomMessages, [activeChat, receivedMessages]);
 
     const findChatMessages = () => {
@@ -187,6 +221,10 @@ export default function Chat(props) {
         return messages;
     };
 
+    const logout = () => {
+        setPage("sign-in");
+    };
+
     const connect = () => {
         const Stomp = require("stompjs");
         var SockJS = require("sockjs-client");
@@ -199,7 +237,7 @@ export default function Chat(props) {
         console.log("connected");
         subscribeChatrooms();
     };
-
+    // eslint-disable-next-line
     const subscribeNotifications = () => {
         stompClient.subscribe("/topic/notice." + username, onNoticeReceived);
     };
@@ -282,6 +320,11 @@ export default function Chat(props) {
                             {activeChat.name}
                         </Typography>
                     </div>
+                    <Button variant="contained" size="large" color="primary"
+                            onClick={() => logout()}
+                            disableElevation className={classes.logOut}>
+                        Logout
+                    </Button>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -299,34 +342,56 @@ export default function Chat(props) {
                 </div>
                 <Divider />
 
-                <TableContainer className={classes.forTableContainer}>
-                    <Table stickyHeader>
-                        <List>
-                            {rooms.map((room) => (
-                                <ListItem>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={() => setActiveChat(room)}
-                                        className={
-                                            room.type === 0
-                                                ? classes.privateChatCard
-                                                : classes.groupChatCard
-                                        }
-                                    >
-                                        <Typography
-                                            variant="h5"
-                                            gutterBottom
-                                            align="center"
+                <div className={classes.listContainer}>
+                    <TableContainer className={classes.iconContainer}>
+                        <Table stickyHeader>
+                            <AccountCircleIcon style={{ fontSize: 40 }}></AccountCircleIcon>
+                            <ChatIcon style={{ fontSize: 40 }}></ChatIcon>
+                            <ListIcon style={{ fontSize: 40 }}></ListIcon>
+                            <NotificationsIcon style={{ fontSize: 40 }}></NotificationsIcon>
+                        </Table>
+                    </TableContainer>
+                    <TableContainer className={classes.forTableContainer}>
+                        <Table stickyHeader>
+                            hjhjhj
+                            h
+                            h
+                            h
+                            h
+
+                            hh
+                            h
+                            h
+                            h
+
+                            <List>
+                                {rooms.map((room) => (
+                                    <ListItem>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            onClick={() => setActiveChat(room)}
+                                            className={
+                                                room.type === 0
+                                                    ? classes.privateChatCard
+                                                    : classes.groupChatCard
+                                            }
                                         >
-                                            {room.name}
-                                        </Typography>
-                                    </Button>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Table>
-                </TableContainer>
+                                            <Typography
+                                                variant="h5"
+                                                gutterBottom
+                                                align="center"
+                                            >
+                                                {room.name}
+                                            </Typography>
+                                        </Button>
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </Table>
+                    </TableContainer>
+                </div>
+
 
                 <div className={classes.panelsContainer}>
                     <Panels
@@ -341,7 +406,7 @@ export default function Chat(props) {
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
-                <TableContainer className={classes.forTableContainer}>
+                <TableContainer className={classes.forTableContainerRight}>
                     <Table
                         stickyHeader
                         className={classes.forRightSideContentTable}

@@ -19,6 +19,7 @@ class App extends React.Component {
     setPageOnDisplay = (pageToDisplay) => {
         this.setState({
             pageOnDisplay: pageToDisplay,
+            online: true,
         });
     };
 
@@ -35,7 +36,7 @@ class App extends React.Component {
         const displaySignUpPage = pageOnDisplay === "sign-up";
 
         function Main(props) {
-            if (props.online === false) {
+            if (props.online === true) {
                 if (displaySignInPage) {
                     return (
                         <SignIn
@@ -48,7 +49,7 @@ class App extends React.Component {
                     return <SignUp setPage={props.setPage}></SignUp>;
                 }
             } else {
-                return <Chat user={props.user}></Chat>;
+                return <Chat user={props.user} setPage={props.setPage}></Chat>;
             }
         }
 
