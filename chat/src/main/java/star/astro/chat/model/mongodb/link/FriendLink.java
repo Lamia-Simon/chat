@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class FriendLink {
+public class FriendLink implements Link {
 
     @Id
     private String id;
@@ -19,7 +19,8 @@ public class FriendLink {
         this.id = id;
     }
 
-    public String getUsername0() {
+    @Override
+    public String getHostId() {
         return username0;
     }
 
@@ -27,7 +28,8 @@ public class FriendLink {
         this.username0 = username0;
     }
 
-    public String getUsername1() {
+    @Override
+    public String getGuestId() {
         return username1;
     }
 

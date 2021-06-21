@@ -21,6 +21,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import Icon from '@material-ui/core/Icon';
 import MessageBox from "./components/message/Message";
 import Panels from "./components/panels/Panels";
+import { Popover } from "@material-ui/core";
 
 const appBarHeight = 80;
 const drawerWidth = "26%";
@@ -35,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
         width: `calc(100% - ${drawerWidth})`,
         height: appBarHeight,
         marginLeft: drawerWidth,
+        backgroundColor: "LightSalmon",
+        borderTop: "1px solid black",
     },
     logOut:{
         display: "flex",
@@ -42,9 +45,15 @@ const useStyles = makeStyles((theme) => ({
         marginLeft:"auto"
     },
     chatroomName: {
-        height: 80,
+        height: appBarHeight,
         display: "flex",
         alignItems: "center",
+    },
+    activeChatButton: {
+        textTransform: "none",
+    },
+    activeChatChatroomIdContainer: {
+        padding: 10,
     },
     drawer: {
         width: drawerWidth,
@@ -68,27 +77,32 @@ const useStyles = makeStyles((theme) => ({
     },
     listContainer:{
         display:'flex',
-        //alignItems: "center",
+        alignItems: "center",
         justifyContent:'space-around',
         width: "auto",
-        //height: middleSectionUnifiedHeight,
+        maxHeight: middleSectionUnifiedHeight,
     },
     iconContainer:{
         display: "flex",
-        //alignItems: "center",
+        alignItems: "center",
         width:50,
         height:"100%",
     },
     forTableContainer: {
         display: "flex",
-        //alignItems: "center",
-        //maxHeight: middleSectionUnifiedHeight, // very hacky
+        alignItems: "center",
+        maxHeight: middleSectionUnifiedHeight, // very hacky
         height:"100%",
         backgroundColor: "sandyBrown",
     },
-    forTableContainerRight: {
+    forTableContainerRight: {},
+    forTableContainerOfChats: {
         width: "100%",
-        //maxHeight: middleSectionUnifiedHeight, // very hacky
+        maxHeight: middleSectionUnifiedHeight, // very hacky
+    },
+    forTableContainerOfMessages: {
+        width: "100%",
+        maxHeight: middleSectionUnifiedHeight + 17, // very hacky
     },
     panelsContainer: {
         display: "flex",
@@ -310,15 +324,57 @@ export default function Chat(props) {
         });
     };
 
+    // for popover
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+    //
+
     return (
         <div className={classes.root}>
             <CssBaseline />
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
                     <div className={classes.chatroomName}>
-                        <Typography variant="h4" noWrap>
-                            {activeChat.name}
-                        </Typography>
+                        <Button
+                            className={classes.activeChatButton}
+                            onClick={handleClick}
+                            disabled={activeChat.type === 0}
+                            style={{
+                                color: "black",
+                            }}
+                        >
+                            <Typography variant="h4" noWrap>
+                                {activeChat.name}
+                            </Typography>
+                        </Button>
+                        <Popover
+                            open={open}
+                            anchorEl={anchorEl}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                                vertical: "center",
+                                horizontal: "right",
+                            }}
+                        >
+                            <div
+                                className={
+                                    classes.activeChatChatroomIdContainer
+                                }
+                            >
+                                <Typography variant="h6">
+                                    {activeChat.chatroomId}
+                                </Typography>
+                            </div>
+                        </Popover>
                     </div>
                     <Button variant="contained" size="large" color="primary"
                             onClick={() => logout()}
@@ -351,37 +407,27 @@ export default function Chat(props) {
                             <NotificationsIcon style={{ fontSize: 40 }}></NotificationsIcon>
                         </Table>
                     </TableContainer>
-                    <TableContainer className={classes.forTableContainer}>
-                        <Table stickyHeader>
-                            hjhjhj
-                            h
-                            h
-                            h
-                            h
 
-                            hh
-                            h
-                            h
-                            h
-
-                            <List>
-                                {rooms.map((room) => (
-                                    <ListItem>
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            onClick={() => setActiveChat(room)}
-                                            className={
-                                                room.type === 0
-                                                    ? classes.privateChatCard
-                                                    : classes.groupChatCard
-                                            }
+                <TableContainer className={classes.forTableContainerOfChats}>
+                    <Table stickyHeader>
+                        <List>
+                            {rooms.map((room) => (
+                                <ListItem>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => setActiveChat(room)}
+                                        className={
+                                            room.type === 0
+                                                ? classes.privateChatCard
+                                                : classes.groupChatCard
+                                        }
+                                    >
+                                        <Typography
+                                            variant="h5"
+                                            gutterBottom
+                                            align="center"
                                         >
-                                            <Typography
-                                                variant="h5"
-                                                gutterBottom
-                                                align="center"
-                                            >
                                                 {room.name}
                                             </Typography>
                                         </Button>
@@ -406,7 +452,9 @@ export default function Chat(props) {
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
+
                 <TableContainer className={classes.forTableContainerRight}>
+
                     <Table
                         stickyHeader
                         className={classes.forRightSideContentTable}
@@ -436,7 +484,7 @@ export default function Chat(props) {
                     onKeyDown={(e) => handleKeyDown(e)}
                 ></TextField>
                 <Button
-                    variant="contained"
+                    variant="outlined"
                     color="primary"
                     onClick={activateSendChatMessage}
                 >

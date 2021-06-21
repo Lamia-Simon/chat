@@ -8,3 +8,6 @@ spring:
         enabled: true
   session:
     store-type: MongoDB
+  output:
+    ansi:
+      enabled: ALWAYS
