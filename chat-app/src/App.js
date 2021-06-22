@@ -2,6 +2,16 @@ import React from "react";
 import SignIn from "./sign-in/SignIn";
 import Chat from "./chat/Chat";
 import SignUp from "./sign-up/SignUp";
+import axios from "axios";
+
+(function () {
+    let token = localStorage.getItem("token");
+    if (token) {
+        axios.defaults.headers.common["Authorization"] = token;
+    } else {
+        axios.defaults.headers.common["Authorization"] = null;
+    }
+})();
 
 class App extends React.Component {
     props = {};
