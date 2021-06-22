@@ -36,7 +36,7 @@ class App extends React.Component {
         const displaySignUpPage = pageOnDisplay === "sign-up";
 
         function Main(props) {
-            if (props.online === true) {
+            if (props.online === false) {
                 if (displaySignInPage) {
                     return (
                         <SignIn

@@ -202,8 +202,47 @@ export default function Chat(props) {
 
     };
 
-    const deleteChat = (name) => {
-
+    const deleteChat = (name,type) => {
+        if(type===1){
+            let formData = new FormData();
+            formData.append("user", username);
+            formData.append("group", name);
+            fetch(
+                REACT_APP_SERVER_ADDRESS + "/user/group/leave",
+                {
+                    method: "POST",
+                    body:formData
+                }
+            ).then((response) => {
+                response.json().then((data) => {
+                    if (data.success === true) {
+                        setChatrooms();
+                    } else {
+                        console.log("nope");
+                    }
+                });
+            });
+        }
+        else{
+            let formData = new FormData();
+            formData.append("user", username);
+            formData.append("friend", name);
+            fetch(
+                REACT_APP_SERVER_ADDRESS + "/user/friend/delete",
+                {
+                    method: "POST",
+                    body:formData
+                }
+            ).then((response) => {
+                response.json().then((data) => {
+                    if (data.success === true) {
+                        setChatrooms();
+                    } else {
+                        console.log("nope");
+                    }
+                });
+            });
+        }
     };
 
     const setChatrooms = () => {
@@ -547,7 +586,7 @@ export default function Chat(props) {
                                             </Typography>
                                         </Button>
                                     <Button variant="outlined" color="primary" className={classes.deleteChat}
-                                    onClick={deleteChat(room.name)}>
+                                    onClick={deleteChat(room.name,room.type)}>
                                         Delete
                                     </Button>
                                     </ListItem>
