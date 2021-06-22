@@ -27,6 +27,8 @@ import MessageBox from "./components/message/Message";
 import Panels from "./components/panels/Panels";
 import { Popover } from "@material-ui/core";
 import { NoEncryption } from "@material-ui/icons";
+import GridList from '@material-ui/core/GridList';
+import GridListTile from "@material-ui/core/GridListTile";
 
 const appBarHeight = 80;
 const drawerWidth = "26%";
@@ -167,6 +169,9 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "white",
     },
     forTextField: {},
+    stickers:{
+
+    },
 }));
 
 const { REACT_APP_SERVER_ADDRESS } = process.env;
@@ -180,7 +185,9 @@ export default function Chat(props) {
     const username = props.user.name;
     const [chatText, setChatText] = useState("");
     const [rooms, setRooms] = useState([]);
+    const [stickers, setStickers] = useState([]);
     var img;
+    var sticker;
     const [activeChat, setActiveChat] = useState({
         chatroomId: "123",
         name: "123",
@@ -188,6 +195,7 @@ export default function Chat(props) {
     const [currentChatroomMessages, setCurrentChatroomMessages] = useState([]);
     const [receivedMessages, setReceivedMessages] = useState([]);
     const [openinfo, setOpenInfo] = React.useState(false);
+    const [opensticker, setOpenSticker] = React.useState(false);
     const [newPassword, setNewPassword] = useState("");
     const [comform, setComform] = useState("");
 
@@ -199,6 +207,14 @@ export default function Chat(props) {
 
     const handleClickCloseInfo = () => {
         setOpenInfo(false);
+    };
+
+    const handleClickOpenSticker = () => {
+        setOpenSticker(true);
+    };
+
+    const handleClickCloseSticker = () => {
+        setOpenSticker(false);
     };
 
     const subscribeInfo = () => {
@@ -232,11 +248,11 @@ export default function Chat(props) {
         }
     };
 
-    const deleteChat = (name,type) => {
+    const deleteChat = (chatroomId,name,type) => {
         if(type===1){
             let formData = new FormData();
             formData.append("user", username);
-            formData.append("group", name);
+            formData.append("groupId", chatroomId);
             fetch(
                 REACT_APP_SERVER_ADDRESS + "/user/group/leave",
                 {
@@ -289,6 +305,21 @@ export default function Chat(props) {
     };
     // eslint-disable-next-line
     useEffect(setChatrooms, []); // set chatrooms after entering the chat page
+
+    const setMyStickers = () => {
+        fetch(
+            REACT_APP_SERVER_ADDRESS + "/user/sticker/get?username=" + username,
+            {
+                method: "GET",
+            }
+        ).then((response) => {
+            response.json().then((data) => {
+                setStickers(data.stickers);
+            });
+        });
+    };
+    // eslint-disable-next-line
+    useEffect(setMyStickers, []);
 
     useEffect(() => {
         if (rooms === undefined) {
@@ -485,6 +516,87 @@ export default function Chat(props) {
         }
     };
 
+
+
+    const handleStickerChosen = (e) => {
+        var files = e.target.files;
+        // console.log(files);
+        // var reader = new FileReader();
+        console.log(files[0])
+        if(files[0].size>5000000){
+            alert("图片大小不得超过1M");
+            return ;
+        }
+        cutStickerImageBase64AndSend(files[0],400,0.6);
+        // reader.readAsDataURL(files[0]);//读取本地图片
+        // reader.onload = function (e) {
+        //     // alert(this.result);
+        //     // console.log(this.result);
+        //     // setImg(this.result);
+        //     img = this.result;
+        //     console.log(img);
+        // };
+    };
+    const cutStickerImageBase64AndSend = (file,wid,quality) => {
+        var URL = window.URL || window.webkitURL;
+        var blob = URL.createObjectURL(file);
+        var base64;
+        var image = new Image();
+        image.src = blob;
+        image.onload = function() {
+            var that = this;
+            //生成比例
+            var w = that.width,
+                h = that.height,
+                scale = w / h;
+            w = wid || w;
+            h = w / scale;
+            //生成canvas
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            canvas.setAttribute("width",w);
+            canvas.setAttribute("height",h);
+            //   canvas.attr({
+            //     width: w,
+            //     height: h
+            //   });
+            ctx.drawImage(that, 0, 0, w, h);
+            // 生成base64
+            base64 = canvas.toDataURL('image/jpeg', quality || 0.8);
+            sticker  = base64
+            let formData = new FormData();
+            formData.append("username", username);
+            formData.append("sticker", sticker);
+            fetch(
+                REACT_APP_SERVER_ADDRESS + "/user/sticker/add",
+                {
+                    method: "POST",
+                    body:formData
+                }
+            ).then((response) => {
+                response.json().then((data) => {
+                    if (data.success === true) {
+                        setMyStickers();
+                    } else {
+                        console.log("nope");
+                    }
+                });
+            });
+        }
+    };
+
+    const stickerSend = (sticker) =>{
+        img = sticker;
+        activateSendChatMessage(
+            "img"
+        );
+    };
+
+    const handlesticker = (sticker) =>{
+        var ans = "data:image/png;base64," + sticker;
+        return ans;
+    }
+
     // for popover
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -507,7 +619,7 @@ export default function Chat(props) {
                     <div className={classes.chatroomName}>
                         <Button
                             className={classes.activeChatButton}
-                            onClick={handleClick}
+                            onClick={()=>handleClick}
                             disabled={activeChat.type === 0}
                             style={{
                                 color: "black",
@@ -520,7 +632,7 @@ export default function Chat(props) {
                         <Popover
                             open={open}
                             anchorEl={anchorEl}
-                            onClose={handleClose}
+                            onClose={()=>handleClose}
                             anchorOrigin={{
                                 vertical: "center",
                                 horizontal: "right",
@@ -626,7 +738,7 @@ export default function Chat(props) {
                                             </Typography>
                                         </Button>
                                     <Button variant="outlined" color="primary" className={classes.deleteChat}
-                                    onClick={deleteChat(room.name,room.type)}>
+                                    onClick={()=>deleteChat(room.chatroomId,room.name,room.type)}>
                                         Delete
                                     </Button>
                                     </ListItem>
@@ -695,7 +807,35 @@ export default function Chat(props) {
                     >
                         <input style={{ display: "none" }} id="trig" type="file" accept="image/gif,image/jpeg,image/jpg,image/png" onChange={handleFileChange} />
                         发送图片
-                    </Button></div>
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={handleClickOpenSticker}
+                    >
+                        发送表情
+                    </Button>
+                    <Dialog open={opensticker} onClose={handleClickCloseSticker} aria-labelledby="form-dialog-title" className={classes.stickers}>
+                        <DialogContent>
+                            <GridList cellHeight={160} className={classes.gridList} cols={4}>
+                                {stickers.map((sticker,index) => (
+                                    <GridListTile key={index} >
+                                        <img src={handlesticker(sticker)} alt="" />
+                                    </GridListTile>
+                                ))}
+                            </GridList>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClickCloseSticker} color="primary">
+                                Cancel
+                            </Button>
+                            <Button  color="primary" onClick={triggerUpload}>
+                                <input style={{ display: "none" }} id="trig" type="file" accept="image/gif,image/jpeg,image/jpg,image/png" onChange={handleStickerChosen} />
+                                Add
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </div>
             </div>
         </div>
     );
