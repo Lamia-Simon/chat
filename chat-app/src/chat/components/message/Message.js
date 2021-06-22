@@ -40,6 +40,7 @@ export default function ChatMessage(props) {
     const content = props.content;
     const time = props.time.substring(11, 16);
     const mine = props.mine;
+    const type = props.content.length>10&&props.content.substring(0,10)==="data:image"?"img":"txt";
 
     const containerClass = mine
         ? classes.containerOnRightSide
@@ -56,13 +57,16 @@ export default function ChatMessage(props) {
             >
                 {time}
             </Typography>
+
             <Card className={[classes.messageCard, cardClass].join(" ")}>
+                
                 <Typography variant="h6" className={classes.username} hidden>
                     {username}
                 </Typography>
-                <Typography variant="h6" style={{ wordWrap: "break-word" }}>
+                {type === "txt" ?    
+                (<Typography variant="h6" style={{ wordWrap: "break-word" }}>
                     {content}
-                </Typography>
+                </Typography>) :( <img src={props.content} alt=""></img>)}
             </Card>
         </div>
     );

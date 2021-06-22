@@ -26,6 +26,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import MessageBox from "./components/message/Message";
 import Panels from "./components/panels/Panels";
 import { Popover } from "@material-ui/core";
+import { NoEncryption } from "@material-ui/icons";
 
 const appBarHeight = 80;
 const drawerWidth = "26%";
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     iconGroup:{
         display: "flex",
         alignItems: "center",
-        marginLeft:"auto"
+        marginLeft: "auto"
     },
     accountIcon:{
         marginRight:20
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     },
     drawer: {
         width: drawerWidth,
-        height:"auto",
+        height: "auto",
         flexShrink: 0,
     },
     drawerPaper: {
@@ -85,10 +86,10 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: 40,
         fontSize: 40,
     },
-    listContainer:{
-        display:'flex',
+    listContainer: {
+        display: 'flex',
         alignItems: "center",
-        justifyContent:'space-around',
+        justifyContent: 'space-around',
         width: "auto",
         maxHeight: middleSectionUnifiedHeight,
     },
@@ -99,6 +100,7 @@ const useStyles = makeStyles((theme) => ({
     forTableContainerOfMessages: {
         width: "100%",
         maxHeight: middleSectionUnifiedHeight + 17, // very hacky
+        paddingBottom: "100px",
     },
     panelsContainer: {
         display: "flex",
@@ -177,7 +179,8 @@ export default function Chat(props) {
     const setPage = props.setPage;
     const username = props.user.name;
     const [chatText, setChatText] = useState("");
-    const [rooms, setRooms] = useState([{type:1,name:"454"},{type:0,name:"ds"},{type:0,name:"ds"},{type:0,name:"ds"}]);
+    const [rooms, setRooms] = useState([]);
+    var img;
     const [activeChat, setActiveChat] = useState({
         chatroomId: "123",
         name: "123",
@@ -306,40 +309,111 @@ export default function Chat(props) {
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
-            activateSendChatMessage();
+            activateSendChatMessage("txt");
         }
     };
 
-    const sendChatMessage = (time) => {
-        setChatText("");
-        let msg = chatText;
-        if (msg.trim() !== "") {
+    const sendChatMessage = (time,type) => {
+        
+        var msg = chatText;
+        if(type === "img") msg = img;
+        console.log(type);
+        //    console.log(chatText);
+        // let type = "txt";
+        // console.log(msg);
+        // if(msg.length>10&&msg.substring(0,10) === "data:image"){
+        //     type = "img";
+        //     console.log("type set as img");
+        // }
+        // else    console.log("type set as txt");
+        if (type === "img" || msg.trim() !== "") {
+         
             let chatroomId = activeChat.chatroomId;
             let friendName = activeChat.name;
             const message = {
                 sender: username,
                 receiver: friendName,
-                content: msg,
+                content: type==="img"?img:chatText,
                 time: new Date(time),
+                type: type
             };
+            console.log("msg constructed");
             stompClient.send(
                 "/app/chatroom/" + chatroomId,
                 {},
                 JSON.stringify(message)
             );
+            console.log("message sent");
         }
+        setChatText("");
+        
     };
 
-    const activateSendChatMessage = () => {
+    const activateSendChatMessage = (type) => {
         // get UTC time first, send message in callback
         fetch(REACT_APP_SERVER_ADDRESS + "/time", {
             method: "GET",
         }).then((response) => {
             response.json().then((data) => {
                 let time = data.UTCTime.UnixTime;
-                sendChatMessage(time);
+                sendChatMessage(time,type);
             });
         });
+    };
+    const triggerUpload = () => {
+        const trig = document.getElementById('trig');
+        trig.click();
+    }
+    const handleFileChange = (e) => {
+        var files = e.target.files;
+        // console.log(files);
+        // var reader = new FileReader();
+        console.log(files[0])
+        if(files[0].size>5000000){
+            alert("图片大小不得超过1M");
+            return ;
+        }
+        cutImageBase64AndSend(files[0],400,0.6);
+        // reader.readAsDataURL(files[0]);//读取本地图片
+        // reader.onload = function (e) {
+        //     // alert(this.result);
+        //     // console.log(this.result);
+        //     // setImg(this.result);
+        //     img = this.result;
+        //     console.log(img);
+        // };
+    };
+    const cutImageBase64AndSend = (file,wid,quality) => {
+        var URL = window.URL || window.webkitURL;
+        var blob = URL.createObjectURL(file);
+        var base64;
+        var image = new Image();
+        image.src = blob;
+        image.onload = function() {
+          var that = this;
+          //生成比例
+          var w = that.width,
+            h = that.height,
+            scale = w / h;
+          w = wid || w;
+          h = w / scale;
+          //生成canvas
+          var canvas = document.createElement('canvas');
+          var ctx = canvas.getContext('2d');
+          canvas.setAttribute("width",w);
+          canvas.setAttribute("height",h);
+        //   canvas.attr({
+        //     width: w,
+        //     height: h
+        //   });
+          ctx.drawImage(that, 0, 0, w, h);
+          // 生成base64
+          base64 = canvas.toDataURL('image/jpeg', quality || 0.8);
+          img  = base64
+          activateSendChatMessage(
+            "img"
+          );
+        }
     };
 
     // for popover
@@ -464,11 +538,11 @@ export default function Chat(props) {
                                                 : classes.groupChatCard
                                         }
                                     >
-                                        <Typography
-                                            variant="h5"
-                                            gutterBottom
-                                            align="center"
-                                        >
+                                            <Typography
+                                                variant="h5"
+                                                gutterBottom
+                                                align="center"
+                                            >
                                                 {room.name}
                                             </Typography>
                                         </Button>
@@ -497,7 +571,7 @@ export default function Chat(props) {
             <main className={classes.content}>
                 <div className={classes.toolbar} />
 
-                <TableContainer className={classes.forTableContainerRight}>
+                <TableContainer className={classes.forTableContainerOfMessages}>
 
                     <Table
                         stickyHeader
@@ -527,13 +601,22 @@ export default function Chat(props) {
                     onChange={(e) => setChatText(e.target.value)}
                     onKeyDown={(e) => handleKeyDown(e)}
                 ></TextField>
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={activateSendChatMessage}
-                >
-                    Send
-                </Button>
+                <div style={{ display: "flex" }}>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={(e)=> activateSendChatMessage("txt")}
+                    >
+                        SEND
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={triggerUpload}
+                    >
+                        <input style={{ display: "none" }} id="trig" type="file" accept="image/gif,image/jpeg,image/jpg,image/png" onChange={handleFileChange} />
+                        发送图片
+                    </Button></div>
             </div>
         </div>
     );

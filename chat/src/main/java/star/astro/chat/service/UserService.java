@@ -35,6 +35,10 @@ public class UserService {
         this.groupChatUserLinkRepository = groupChatUserLinkRepository;
     }
 
+    public User findUserByName(String name) {
+        return userRepository.findUserByName(name);
+    }
+
     public boolean createUserByName(String name, String password) {
         if (userRepository.findUserByName(name) != null) {
             return false;
