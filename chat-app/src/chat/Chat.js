@@ -632,7 +632,7 @@ export default function Chat(props) {
                                         variant="outlined"
                                         color="primary"
                                         className={classes.deleteChat}
-                                        onClick={deleteChat(
+                                        onClick={() => deleteChat(
                                             room.name,
                                             room.type
                                         )}
