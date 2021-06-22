@@ -60,8 +60,6 @@ public class JWTRealm extends AuthorizingRealm {
         } catch (Exception e) {
             throw new AuthenticationException("token非法，不是规范的token，可能被篡改了，或者过期了");
         }
-        System.out.println(jwt);
-        System.out.println(uid);
         if (uid == null) {
             throw new AuthenticationException("token中无用户名");
         }
@@ -77,8 +75,6 @@ public class JWTRealm extends AuthorizingRealm {
             } else {
                 //判断AccessToken和refreshToken的时间节点是否一致
                 long current = (long) redisUtil.get(uid);
-                System.out.println(current);
-                System.out.println(JWTUtil.getExpire(jwt));
                 return new SimpleAuthenticationInfo(user, jwt, "JWTRealm");
             }
         } else {
@@ -87,4 +83,3 @@ public class JWTRealm extends AuthorizingRealm {
     }
 
 }
-
