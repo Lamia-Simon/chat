@@ -2,7 +2,7 @@ package star.astro.chat.model.mongodb;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import java.util.List;
 @Document
 public class User {
 
@@ -10,6 +10,7 @@ public class User {
     String name;
     String password;
     boolean online;
+    List<String> stickers;
 
     public User(String name, String password) {
         this.name = name;
@@ -44,4 +45,11 @@ public class User {
         this.online = false;
     }
 
+    public void setStickers(List<String> stickers){
+        this.stickers = stickers;
+    }
+    
+    public List<String> getStickers(){
+        return this.stickers;
+    }
 }

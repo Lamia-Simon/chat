@@ -69,6 +69,7 @@ export default function SignIn(props) {
                     };
                     user.name = data.username;
                     setUser(user);
+                    localStorage.setItem("token", data.token);
                 } else {
                     console.log("nope");
                 }
@@ -123,7 +124,7 @@ export default function SignIn(props) {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={(e)=>onSubmit(e)}
+                        onClick={(e) => onSubmit(e)}
                     >
                         Sign In
                     </Button>

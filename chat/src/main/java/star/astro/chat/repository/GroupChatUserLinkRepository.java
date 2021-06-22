@@ -11,5 +11,6 @@ public interface GroupChatUserLinkRepository extends MongoRepository<GroupChatUs
 
     List<GroupChatUserLink> findGroupChatUserLinkByUsername(String username);
 
-    void deleteByChatroomIdAndUsername(String id, String user);
+    void deleteByChatroomId(String chatroomId);
+
 }

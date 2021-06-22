@@ -2,6 +2,7 @@ package star.astro.chat.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
 import star.astro.chat.model.wrapper.chatroom.Chatroom;
 import star.astro.chat.service.UserService;
@@ -50,6 +51,7 @@ public class UserController {
         return ret;
     }
 
+    @RequiresRoles("user")
     @PostMapping("/user/friend")
     public JSONObject addFriend(@RequestParam Map<String, Object> params) {
         JSONObject ret = new JSONObject();
@@ -72,6 +74,7 @@ public class UserController {
         return ret;
     }
 
+    @RequiresRoles("user")
     @PostMapping("/chatroom")
     public JSONObject createChatroom(@RequestParam Map<String, Object> params) {
         JSONObject ret = new JSONObject();
@@ -82,6 +85,7 @@ public class UserController {
         return ret;
     }
 
+    @RequiresRoles("user")
     @PutMapping("/user/chatroom")
     public JSONObject joinChatroom(@RequestParam Map<String, Object> params) {
         JSONObject ret = new JSONObject();
@@ -92,25 +96,49 @@ public class UserController {
         return ret;
     }
 
+    @RequiresRoles("user")
     @GetMapping("/user/chatroom")
     public List<Chatroom> getUserChatrooms(@RequestParam Map<String, Object> params) {
         String username = (String) params.get("username");
         return userService.getUserChatrooms(username);
     }
 
-    @PostMapping("/user/friend/delete")
-    public JSONObject deleteFriend(@RequestParam("user") String user, @RequestParam("friend") String friend){
+    @DeleteMapping("/user/friend/delete")
+    public JSONObject deleteFriend(@RequestParam Map<String, String> params) {
         JSONObject ret = new JSONObject();
-        userService.deleteFriend(user, friend);
+        String chatroomId = params.get("chatroomId");
+        userService.deleteFriend(chatroomId);
         ret.put("success", true);
         return ret;
     }
 
-    @PostMapping("/user/group/leave")
-    public JSONObject exitGroup(@RequestParam("user") String user, @RequestParam("groupId") String group){
+    @DeleteMapping("/user/group/leave")
+    public JSONObject exitGroup(@RequestParam Map<String, String> params) {
         JSONObject ret = new JSONObject();
-        userService.exitGroup(user, group);
+        String chatroomId = params.get("chatroomId");
+        userService.exitGroup(chatroomId);
         ret.put("success", true);
+        return ret;
+    }
+
+    @RequiresRoles("user")
+    @PostMapping("/user/sticker/add")
+    public JSONObject addSticker(@RequestParam Map<String, Object> params){
+        String username = (String) params.get("username");
+        String stickerBase64 =  (String) params.get("sticker");
+        userService.addSticker(username,stickerBase64);
+        JSONObject ret = new JSONObject();
+        ret.put("success", true);
+        return ret;
+    }
+
+    @GetMapping("/user/sticker/get")
+    public JSONObject getSticker(@RequestParam Map<String, Object> params){
+        String username = (String) params.get("username");
+        // userService.addSticker(username,sticker);
+        JSONObject ret = new JSONObject();
+        ret.put("success", true);
+        ret.put("stickers",userService.getStickers(username));
         return ret;
     }
 

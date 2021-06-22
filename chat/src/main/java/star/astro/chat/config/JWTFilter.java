@@ -81,6 +81,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest req= (HttpServletRequest) request;
         HttpServletResponse res= (HttpServletResponse) response;
+        res.setHeader("Access-control-Allow-Credentials", "true");
         res.setHeader("Access-control-Allow-Origin", req.getHeader("Origin"));
         res.setHeader("Access-control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
         res.setHeader("Access-control-Allow-Headers", req.getHeader("Access-Control-Request-Headers"));

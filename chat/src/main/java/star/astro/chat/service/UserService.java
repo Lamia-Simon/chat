@@ -14,6 +14,7 @@ import star.astro.chat.repository.GroupChatRepository;
 import star.astro.chat.repository.GroupChatUserLinkRepository;
 import star.astro.chat.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -160,12 +161,23 @@ public class UserService {
         return chatrooms;
     }
 
-    public void deleteFriend(String user, String friend){
-        friendLinkRepository.deleteByUsername0AndUsername1(user, friend);
+    public void deleteFriend(String chatroomId) {
+        friendLinkRepository.deleteById(chatroomId);
     }
 
-    public void exitGroup(String user, String id){
-        groupChatUserLinkRepository.deleteByChatroomIdAndUsername(id, user);
+    public void exitGroup(String chatroomId) {
+        groupChatUserLinkRepository.deleteByChatroomId(chatroomId);
+    }
+    public void addSticker(String user,String sticker){
+        User u = userRepository.findUserByName(user);
+        List<String> stickers = u.getStickers();
+        stickers.add(sticker);
+        u.setStickers(stickers);
+        userRepository.save(u);
     }
 
+    public List<String> getStickers(String user){
+        User u = userRepository.findUserByName(user);
+        return u.getStickers();
+    }
 }

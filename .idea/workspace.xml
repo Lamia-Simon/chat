@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="96a6c031-407f-4f6b-b335-825e2e0b70a9" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/chat-app/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/chat-app/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chat-app/src/chat/Chat.js" beforeDir="false" afterPath="$PROJECT_DIR$/chat-app/src/chat/Chat.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="D:\文件\大三下\设计模式\Program\chat\.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1tZ4oqB2iBwecFfPzfQjdjYEga3" />
+  <component name="ProjectViewState">
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/chat" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="editing.templates" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="96a6c031-407f-4f6b-b335-825e2e0b70a9" name="Default Changelist" comment="" />
+      <created>1622963454416</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1622963454416</updated>
+      <workItem from="1622963455947" duration="5447000" />
+      <workItem from="1623053562754" duration="12383000" />
+      <workItem from="1623118372832" duration="9999000" />
+      <workItem from="1623675962208" duration="3499000" />
+      <workItem from="1623722899283" duration="5049000" />
+      <workItem from="1623831091648" duration="3582000" />
+      <workItem from="1623999174499" duration="5931000" />
+      <workItem from="1624069183908" duration="8253000" />
+      <workItem from="1624176113852" duration="2581000" />
+      <workItem from="1624240440706" duration="39565000" />
+      <workItem from="1624332068321" duration="29254000" />
+    </task>
+    <task id="LOCAL-00001" summary="cj">
+      <created>1624357155340</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1624357155340</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="cj" />
+    <option name="LAST_COMMIT_MESSAGE" value="cj" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="478" y="13" key="CommitChangelistDialog2" timestamp="1624357154119">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="478" y="13" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1624357154119" />
+    <state x="549" y="170" key="FileChooserDialogImpl" timestamp="1624292677326">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="549" y="170" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1624292677326" />
+    <state x="570" y="132" width="825" height="566" key="MultipleFileMergeDialog" timestamp="1624357224750">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="570" y="132" width="825" height="566" key="MultipleFileMergeDialog/0.0.1536.824@0.0.1536.824" timestamp="1624357224750" />
+    <state x="345" y="60" key="SettingsEditor" timestamp="1624373799880">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="345" y="60" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1624373799880" />
+    <state x="434" y="151" key="Vcs.Push.Dialog.v2" timestamp="1624360127558">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="434" y="151" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1624360127558" />
+    <state x="584" y="217" key="git4idea.merge.GitPullDialog" timestamp="1624367032519">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="584" y="217" key="git4idea.merge.GitPullDialog/0.0.1536.824@0.0.1536.824" timestamp="1624367032519" />
+    <state x="504" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1624373796982">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="504" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1624373796982" />
+  </component>
+</project>

@@ -14,10 +14,10 @@ import {
     TableContainer,
     TextField,
 } from "@material-ui/core";
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import ChatIcon from '@material-ui/icons/Chat';
-import ListIcon from '@material-ui/icons/List';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import ChatIcon from "@material-ui/icons/Chat";
+import ListIcon from "@material-ui/icons/List";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
@@ -27,8 +27,12 @@ import MessageBox from "./components/message/Message";
 import Panels from "./components/panels/Panels";
 import { Popover } from "@material-ui/core";
 import { NoEncryption } from "@material-ui/icons";
+<<<<<<< HEAD
 import GridList from '@material-ui/core/GridList';
 import GridListTile from "@material-ui/core/GridListTile";
+=======
+import axios from "axios";
+>>>>>>> 357c3f1a936f49c7820441fbb5d6b3e07a96ec12
 
 const appBarHeight = 80;
 const drawerWidth = "26%";
@@ -46,17 +50,15 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "LightSalmon",
         borderTop: "1px solid black",
     },
-    iconGroup:{
+    iconGroup: {
         display: "flex",
         alignItems: "center",
-        marginLeft: "auto"
+        marginLeft: "auto",
     },
-    accountIcon:{
-        marginRight:20
+    accountIcon: {
+        marginRight: 20,
     },
-    logOut:{
-
-    },
+    logOut: {},
     chatroomName: {
         height: appBarHeight,
         display: "flex",
@@ -89,9 +91,9 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 40,
     },
     listContainer: {
-        display: 'flex',
+        display: "flex",
         alignItems: "center",
-        justifyContent: 'space-around',
+        justifyContent: "space-around",
         width: "auto",
         maxHeight: middleSectionUnifiedHeight,
     },
@@ -109,9 +111,9 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         alignItems: "center",
     },
-    deleteChat:{
-        height:50,
-        marginLeft:5
+    deleteChat: {
+        height: 50,
+        marginLeft: 5,
     },
     privateChatCard: {
         width: "100%",
@@ -248,6 +250,7 @@ export default function Chat(props) {
         }
     };
 
+<<<<<<< HEAD
     const deleteChat = (chatroomId,name,type) => {
         if(type===1){
             let formData = new FormData();
@@ -268,40 +271,40 @@ export default function Chat(props) {
                     }
                 });
             });
+=======
+    const deleteChat = (room) => {
+        let formData = new FormData();
+        formData.append("chatroomId", room.chatroomId);
+        let requestUrl;
+        if(room.type === 1) {
+            requestUrl = REACT_APP_SERVER_ADDRESS + "/user/group/leave"
+>>>>>>> 357c3f1a936f49c7820441fbb5d6b3e07a96ec12
         }
-        else{
-            let formData = new FormData();
-            formData.append("user", username);
-            formData.append("friend", name);
-            fetch(
-                REACT_APP_SERVER_ADDRESS + "/user/friend/delete",
-                {
-                    method: "POST",
-                    body:formData
+        else {
+            requestUrl = REACT_APP_SERVER_ADDRESS + "/user/friend/delete"
+        }
+        fetch(requestUrl, {
+            method: "DELETE",
+            body: formData,
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.success === true) {
+                    setChatrooms();
+                } else {
+                    console.log("nope");
                 }
-            ).then((response) => {
-                response.json().then((data) => {
-                    if (data.success === true) {
-                        setChatrooms();
-                    } else {
-                        console.log("nope");
-                    }
-                });
             });
-        }
+        });
     };
 
     const setChatrooms = () => {
-        fetch(
-            REACT_APP_SERVER_ADDRESS + "/user/chatroom?username=" + username,
-            {
-                method: "GET",
-            }
-        ).then((response) => {
-            response.json().then((data) => {
-                setRooms(data);
+        axios
+            .get(
+                REACT_APP_SERVER_ADDRESS + "/user/chatroom?username=" + username
+            )
+            .then((response) => {
+                setRooms(response.data);
             });
-        });
     };
     // eslint-disable-next-line
     useEffect(setChatrooms, []); // set chatrooms after entering the chat page
@@ -413,10 +416,9 @@ export default function Chat(props) {
         }
     };
 
-    const sendChatMessage = (time,type) => {
-        
+    const sendChatMessage = (time, type) => {
         var msg = chatText;
-        if(type === "img") msg = img;
+        if (type === "img") msg = img;
         console.log(type);
         //    console.log(chatText);
         // let type = "txt";
@@ -427,15 +429,14 @@ export default function Chat(props) {
         // }
         // else    console.log("type set as txt");
         if (type === "img" || msg.trim() !== "") {
-         
             let chatroomId = activeChat.chatroomId;
             let friendName = activeChat.name;
             const message = {
                 sender: username,
                 receiver: friendName,
-                content: type==="img"?img:chatText,
+                content: type === "img" ? img : chatText,
                 time: new Date(time),
-                type: type
+                type: type,
             };
             console.log("msg constructed");
             stompClient.send(
@@ -446,7 +447,6 @@ export default function Chat(props) {
             console.log("message sent");
         }
         setChatText("");
-        
     };
 
     const activateSendChatMessage = (type) => {
@@ -456,24 +456,24 @@ export default function Chat(props) {
         }).then((response) => {
             response.json().then((data) => {
                 let time = data.UTCTime.UnixTime;
-                sendChatMessage(time,type);
+                sendChatMessage(time, type);
             });
         });
     };
     const triggerUpload = () => {
-        const trig = document.getElementById('trig');
+        const trig = document.getElementById("trig");
         trig.click();
-    }
+    };
     const handleFileChange = (e) => {
         var files = e.target.files;
         // console.log(files);
         // var reader = new FileReader();
-        console.log(files[0])
-        if(files[0].size>5000000){
+        console.log(files[0]);
+        if (files[0].size > 5000000) {
             alert("图片大小不得超过1M");
-            return ;
+            return;
         }
-        cutImageBase64AndSend(files[0],400,0.6);
+        cutImageBase64AndSend(files[0], 400, 0.6);
         // reader.readAsDataURL(files[0]);//读取本地图片
         // reader.onload = function (e) {
         //     // alert(this.result);
@@ -483,37 +483,35 @@ export default function Chat(props) {
         //     console.log(img);
         // };
     };
-    const cutImageBase64AndSend = (file,wid,quality) => {
+    const cutImageBase64AndSend = (file, wid, quality) => {
         var URL = window.URL || window.webkitURL;
         var blob = URL.createObjectURL(file);
         var base64;
         var image = new Image();
         image.src = blob;
-        image.onload = function() {
-          var that = this;
-          //生成比例
-          var w = that.width,
-            h = that.height,
-            scale = w / h;
-          w = wid || w;
-          h = w / scale;
-          //生成canvas
-          var canvas = document.createElement('canvas');
-          var ctx = canvas.getContext('2d');
-          canvas.setAttribute("width",w);
-          canvas.setAttribute("height",h);
-        //   canvas.attr({
-        //     width: w,
-        //     height: h
-        //   });
-          ctx.drawImage(that, 0, 0, w, h);
-          // 生成base64
-          base64 = canvas.toDataURL('image/jpeg', quality || 0.8);
-          img  = base64
-          activateSendChatMessage(
-            "img"
-          );
-        }
+        image.onload = function () {
+            var that = this;
+            //生成比例
+            var w = that.width,
+                h = that.height,
+                scale = w / h;
+            w = wid || w;
+            h = w / scale;
+            //生成canvas
+            var canvas = document.createElement("canvas");
+            var ctx = canvas.getContext("2d");
+            canvas.setAttribute("width", w);
+            canvas.setAttribute("height", h);
+            //   canvas.attr({
+            //     width: w,
+            //     height: h
+            //   });
+            ctx.drawImage(that, 0, 0, w, h);
+            // 生成base64
+            base64 = canvas.toDataURL("image/jpeg", quality || 0.8);
+            img = base64;
+            activateSendChatMessage("img");
+        };
     };
 
 
@@ -651,11 +649,19 @@ export default function Chat(props) {
                     </div>
                     <div className={classes.iconGroup}>
                         <div>
-                            <AccountCircleIcon fontSize={"large"} className={classes.accountIcon}
-                                               onClick={handleClickOpenInfo}
+                            <AccountCircleIcon
+                                fontSize={"large"}
+                                className={classes.accountIcon}
+                                onClick={handleClickOpenInfo}
                             ></AccountCircleIcon>
-                            <Dialog open={openinfo} onClose={handleClickCloseInfo} aria-labelledby="form-dialog-title">
-                                <DialogTitle id="form-dialog-title">Information</DialogTitle>
+                            <Dialog
+                                open={openinfo}
+                                onClose={handleClickCloseInfo}
+                                aria-labelledby="form-dialog-title"
+                            >
+                                <DialogTitle id="form-dialog-title">
+                                    Information
+                                </DialogTitle>
                                 <DialogContent>
                                     <DialogContentText>
                                         Name:{username}
@@ -682,18 +688,29 @@ export default function Chat(props) {
                                     />
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button onClick={handleClickCloseInfo} color="primary">
+                                    <Button
+                                        onClick={handleClickCloseInfo}
+                                        color="primary"
+                                    >
                                         Cancel
                                     </Button>
-                                    <Button onClick={subscribeInfo} color="primary">
+                                    <Button
+                                        onClick={subscribeInfo}
+                                        color="primary"
+                                    >
                                         Subscribe
                                     </Button>
                                 </DialogActions>
                             </Dialog>
                         </div>
-                        <Button variant="contained" size="large" color="primary"
-                                onClick={() => logout()}
-                                disableElevation className={classes.logOut}>
+                        <Button
+                            variant="contained"
+                            size="large"
+                            color="primary"
+                            onClick={() => logout()}
+                            disableElevation
+                            className={classes.logOut}
+                        >
                             Logout
                         </Button>
                     </div>
@@ -729,6 +746,7 @@ export default function Chat(props) {
                                                 : classes.groupChatCard
                                         }
                                     >
+<<<<<<< HEAD
                                             <Typography
                                                 variant="h5"
                                                 gutterBottom
@@ -739,14 +757,31 @@ export default function Chat(props) {
                                         </Button>
                                     <Button variant="outlined" color="primary" className={classes.deleteChat}
                                     onClick={()=>deleteChat(room.chatroomId,room.name,room.type)}>
+=======
+                                        <Typography
+                                            variant="h5"
+                                            gutterBottom
+                                            align="center"
+                                        >
+                                            {room.name}
+                                        </Typography>
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        className={classes.deleteChat}
+                                        onClick={() => deleteChat(
+                                            room
+                                        )}
+                                    >
+>>>>>>> 357c3f1a936f49c7820441fbb5d6b3e07a96ec12
                                         Delete
                                     </Button>
-                                    </ListItem>
-                                ))}
-                            </List>
-                        </Table>
-                    </TableContainer>
-
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Table>
+                </TableContainer>
 
                 <div className={classes.panelsContainer}>
                     <Panels
@@ -763,7 +798,6 @@ export default function Chat(props) {
                 <div className={classes.toolbar} />
 
                 <TableContainer className={classes.forTableContainerOfMessages}>
-
                     <Table
                         stickyHeader
                         className={classes.forRightSideContentTable}
@@ -796,7 +830,7 @@ export default function Chat(props) {
                     <Button
                         variant="outlined"
                         color="primary"
-                        onClick={(e)=> activateSendChatMessage("txt")}
+                        onClick={(e) => activateSendChatMessage("txt")}
                     >
                         SEND
                     </Button>
@@ -805,9 +839,16 @@ export default function Chat(props) {
                         color="primary"
                         onClick={triggerUpload}
                     >
-                        <input style={{ display: "none" }} id="trig" type="file" accept="image/gif,image/jpeg,image/jpg,image/png" onChange={handleFileChange} />
+                        <input
+                            style={{ display: "none" }}
+                            id="trig"
+                            type="file"
+                            accept="image/gif,image/jpeg,image/jpg,image/png"
+                            onChange={handleFileChange}
+                        />
                         发送图片
                     </Button>
+<<<<<<< HEAD
                     <Button
                         variant="outlined"
                         color="primary"
@@ -835,6 +876,8 @@ export default function Chat(props) {
                             </Button>
                         </DialogActions>
                     </Dialog>
+=======
+>>>>>>> 357c3f1a936f49c7820441fbb5d6b3e07a96ec12
                 </div>
             </div>
         </div>
