@@ -27,12 +27,9 @@ import MessageBox from "./components/message/Message";
 import Panels from "./components/panels/Panels";
 import { Popover } from "@material-ui/core";
 import { NoEncryption } from "@material-ui/icons";
-<<<<<<< HEAD
 import GridList from '@material-ui/core/GridList';
 import GridListTile from "@material-ui/core/GridListTile";
-=======
 import axios from "axios";
->>>>>>> 357c3f1a936f49c7820441fbb5d6b3e07a96ec12
 
 const appBarHeight = 80;
 const drawerWidth = "26%";
@@ -228,7 +225,7 @@ export default function Chat(props) {
                 fetch(
                     REACT_APP_SERVER_ADDRESS + "/user/password",
                     {
-                        method: "POST",
+                        method: "PUT",
                         body:formData
                     }
                 ).then((response) => {
@@ -250,35 +247,15 @@ export default function Chat(props) {
         }
     };
 
-<<<<<<< HEAD
-    const deleteChat = (chatroomId,name,type) => {
-        if(type===1){
-            let formData = new FormData();
-            formData.append("user", username);
-            formData.append("groupId", chatroomId);
-            fetch(
-                REACT_APP_SERVER_ADDRESS + "/user/group/leave",
-                {
-                    method: "POST",
-                    body:formData
-                }
-            ).then((response) => {
-                response.json().then((data) => {
-                    if (data.success === true) {
-                        setChatrooms();
-                    } else {
-                        console.log("nope");
-                    }
-                });
-            });
-=======
+
+
+
     const deleteChat = (room) => {
         let formData = new FormData();
         formData.append("chatroomId", room.chatroomId);
         let requestUrl;
         if(room.type === 1) {
             requestUrl = REACT_APP_SERVER_ADDRESS + "/user/group/leave"
->>>>>>> 357c3f1a936f49c7820441fbb5d6b3e07a96ec12
         }
         else {
             requestUrl = REACT_APP_SERVER_ADDRESS + "/user/friend/delete"
@@ -746,7 +723,6 @@ export default function Chat(props) {
                                                 : classes.groupChatCard
                                         }
                                     >
-<<<<<<< HEAD
                                             <Typography
                                                 variant="h5"
                                                 gutterBottom
@@ -755,17 +731,7 @@ export default function Chat(props) {
                                                 {room.name}
                                             </Typography>
                                         </Button>
-                                    <Button variant="outlined" color="primary" className={classes.deleteChat}
-                                    onClick={()=>deleteChat(room.chatroomId,room.name,room.type)}>
-=======
-                                        <Typography
-                                            variant="h5"
-                                            gutterBottom
-                                            align="center"
-                                        >
-                                            {room.name}
-                                        </Typography>
-                                    </Button>
+
                                     <Button
                                         variant="outlined"
                                         color="primary"
@@ -774,7 +740,6 @@ export default function Chat(props) {
                                             room
                                         )}
                                     >
->>>>>>> 357c3f1a936f49c7820441fbb5d6b3e07a96ec12
                                         Delete
                                     </Button>
                                 </ListItem>
@@ -848,7 +813,6 @@ export default function Chat(props) {
                         />
                         发送图片
                     </Button>
-<<<<<<< HEAD
                     <Button
                         variant="outlined"
                         color="primary"
@@ -876,8 +840,6 @@ export default function Chat(props) {
                             </Button>
                         </DialogActions>
                     </Dialog>
-=======
->>>>>>> 357c3f1a936f49c7820441fbb5d6b3e07a96ec12
                 </div>
             </div>
         </div>
