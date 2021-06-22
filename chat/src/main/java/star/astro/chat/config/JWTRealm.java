@@ -24,8 +24,8 @@ import star.astro.chat.util.RedisUtil;
 @Slf4j
 public class JWTRealm extends AuthorizingRealm {
 
-    private UserService userService;
-    private RedisUtil redisUtil;
+    private final UserService userService;
+    private final RedisUtil redisUtil;
 
     //根据token判断此Authenticator是否使用该realm
     //必须重写不然shiro会报错
@@ -39,7 +39,7 @@ public class JWTRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        User user = (User)principals.getPrimaryPrincipal();
+        User user = (User) principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         //查询数据库来获取用户的角色
         info.addRole("user");
@@ -60,6 +60,8 @@ public class JWTRealm extends AuthorizingRealm {
         } catch (Exception e) {
             throw new AuthenticationException("token非法，不是规范的token，可能被篡改了，或者过期了");
         }
+        System.out.println(jwt);
+        System.out.println(uid);
         if (uid == null) {
             throw new AuthenticationException("token中无用户名");
         }
@@ -75,11 +77,9 @@ public class JWTRealm extends AuthorizingRealm {
             } else {
                 //判断AccessToken和refreshToken的时间节点是否一致
                 long current = (long) redisUtil.get(uid);
-                if (current == JWTUtil.getExpire(jwt)) {
-                    return new SimpleAuthenticationInfo(user, jwt, "JWTRealm");
-                } else {
-                    throw new AuthenticationException("token已经失效，请重新登录！");
-                }
+                System.out.println(current);
+                System.out.println(JWTUtil.getExpire(jwt));
+                return new SimpleAuthenticationInfo(user, jwt, "JWTRealm");
             }
         } else {
             throw new AuthenticationException("token过期或者Token错误！！");
