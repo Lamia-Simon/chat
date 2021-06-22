@@ -158,6 +158,7 @@ export default function SignUp(props) {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
+                        onClick={(e)=>onSubmit(e)}
                     >
                         Sign Up
                     </Button>

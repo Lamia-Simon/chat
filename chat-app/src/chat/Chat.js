@@ -185,6 +185,7 @@ export default function Chat(props) {
     const [currentChatroomMessages, setCurrentChatroomMessages] = useState([]);
     const [receivedMessages, setReceivedMessages] = useState([]);
     const [openinfo, setOpenInfo] = React.useState(false);
+    const [newName, setNewName] = useState("");
 
     const handleClickOpenInfo = () => {
         setOpenInfo(true);
@@ -192,6 +193,14 @@ export default function Chat(props) {
 
     const handleClickCloseInfo = () => {
         setOpenInfo(false);
+    };
+
+    const subscribeInfo = () => {
+
+    };
+
+    const deleteChat = (name) => {
+
     };
 
     const setChatrooms = () => {
@@ -403,13 +412,15 @@ export default function Chat(props) {
                                         label="New Name:"
                                         type="email"
                                         fullWidth
+                                        value={newName}
+                                        onChange={(e) => setNewName(e.target.value)}
                                     />
                                 </DialogContent>
                                 <DialogActions>
                                     <Button onClick={handleClickCloseInfo} color="primary">
                                         Cancel
                                     </Button>
-                                    <Button onClick={handleClose} color="primary">
+                                    <Button onClick={subscribeInfo} color="primary">
                                         Subscribe
                                     </Button>
                                 </DialogActions>
@@ -461,7 +472,8 @@ export default function Chat(props) {
                                                 {room.name}
                                             </Typography>
                                         </Button>
-                                    <Button variant="outlined" color="primary" className={classes.deleteChat}>
+                                    <Button variant="outlined" color="primary" className={classes.deleteChat}
+                                    onClick={deleteChat(room.name)}>
                                         Delete
                                     </Button>
                                     </ListItem>

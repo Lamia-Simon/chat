@@ -19,7 +19,7 @@ class App extends React.Component {
     setPageOnDisplay = (pageToDisplay) => {
         this.setState({
             pageOnDisplay: pageToDisplay,
-            online: true,
+            online: false,
         });
     };
 
