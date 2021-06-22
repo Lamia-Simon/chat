@@ -188,9 +188,12 @@ export default function Chat(props) {
     const [currentChatroomMessages, setCurrentChatroomMessages] = useState([]);
     const [receivedMessages, setReceivedMessages] = useState([]);
     const [openinfo, setOpenInfo] = React.useState(false);
-    const [newName, setNewName] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [comform, setComform] = useState("");
 
     const handleClickOpenInfo = () => {
+        setNewPassword("");
+        setComform("");
         setOpenInfo(true);
     };
 
@@ -199,7 +202,34 @@ export default function Chat(props) {
     };
 
     const subscribeInfo = () => {
-
+        if(newPassword!==""){
+            if(newPassword===comform){
+                let formData = new FormData();
+                formData.append("username", username);
+                formData.append("password", newPassword);
+                fetch(
+                    REACT_APP_SERVER_ADDRESS + "/user/password",
+                    {
+                        method: "POST",
+                        body:formData
+                    }
+                ).then((response) => {
+                    response.json().then((data) => {
+                        if (data.success === true) {
+                            handleClickCloseInfo();
+                        } else {
+                            console.log("nope");
+                        }
+                    });
+                });
+            }
+            else{
+                alert("两次输入的密码需相同");
+            }
+        }
+        else{
+            alert("两次输入的密码需相同");
+        }
     };
 
     const deleteChat = (name,type) => {
@@ -519,14 +549,24 @@ export default function Chat(props) {
                                         Name:{username}
                                     </DialogContentText>
                                     <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="name"
+                                    label="New Password:"
+                                    type="password"
+                                    fullWidth
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                />
+                                    <TextField
                                         autoFocus
                                         margin="dense"
                                         id="name"
-                                        label="New Name:"
-                                        type="email"
+                                        label="Comform:"
+                                        type="password"
                                         fullWidth
-                                        value={newName}
-                                        onChange={(e) => setNewName(e.target.value)}
+                                        value={comform}
+                                        onChange={(e) => setComform(e.target.value)}
                                     />
                                 </DialogContent>
                                 <DialogActions>
