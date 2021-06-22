@@ -119,4 +119,25 @@ public class UserController {
         return ret;
     }
 
+    @RequiresRoles("user")
+    @PostMapping("/user/sticker/add")
+    public JSONObject addSticker(@RequestParam Map<String, Object> params){
+        String username = (String) params.get("username");
+        String stickerBase64 =  (String) params.get("sticker");
+        userService.addSticker(username,stickerBase64);
+        JSONObject ret = new JSONObject();
+        ret.put("success", true);
+        return ret;
+    }
+
+    @GetMapping("/user/sticker/get")
+    public JSONObject getSticker(@RequestParam Map<String, Object> params){
+        String username = (String) params.get("username");
+        // userService.addSticker(username,sticker);
+        JSONObject ret = new JSONObject();
+        ret.put("success", true);
+        ret.put("stickers",userService.getStickers(username));
+        return ret;
+    }
+
 }
