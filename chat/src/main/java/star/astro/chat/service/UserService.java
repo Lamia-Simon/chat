@@ -35,6 +35,10 @@ public class UserService {
         this.groupChatUserLinkRepository = groupChatUserLinkRepository;
     }
 
+    public User findUserByName(String name) {
+        return userRepository.findUserByName(name);
+    }
+
     public boolean createUserByName(String name, String password) {
         if (userRepository.findUserByName(name) != null) {
             return false;
@@ -148,6 +152,14 @@ public class UserService {
         chatrooms.addAll(getPrivateChatrooms(username));
         chatrooms.addAll(getGroupChatrooms(username));
         return chatrooms;
+    }
+
+    public void deleteFriend(String user, String friend){
+        friendLinkRepository.deleteByUsername0AndUsername1(user, friend);
+    }
+
+    public void exitGroup(String user, String id){
+        groupChatUserLinkRepository.deleteByChatroomIdAndUsername(id, user);
     }
 
 }

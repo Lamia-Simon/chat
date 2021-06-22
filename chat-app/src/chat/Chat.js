@@ -18,7 +18,11 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ChatIcon from '@material-ui/icons/Chat';
 import ListIcon from '@material-ui/icons/List';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import Icon from '@material-ui/core/Icon';
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import MessageBox from "./components/message/Message";
 import Panels from "./components/panels/Panels";
 import { Popover } from "@material-ui/core";
@@ -40,10 +44,16 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "LightSalmon",
         borderTop: "1px solid black",
     },
-    logOut: {
+    iconGroup:{
         display: "flex",
         alignItems: "center",
         marginLeft: "auto"
+    },
+    accountIcon:{
+        marginRight:20
+    },
+    logOut:{
+
     },
     chatroomName: {
         height: appBarHeight,
@@ -83,20 +93,6 @@ const useStyles = makeStyles((theme) => ({
         width: "auto",
         maxHeight: middleSectionUnifiedHeight,
     },
-    iconContainer: {
-        display: "flex",
-        alignItems: "center",
-        width: 50,
-        height: "100%",
-    },
-    forTableContainer: {
-        display: "flex",
-        alignItems: "center",
-        maxHeight: middleSectionUnifiedHeight, // very hacky
-        height:"100%",
-        backgroundColor: "sandyBrown",
-    },
-    forTableContainerRight: {},
     forTableContainerOfChats: {
         width: "100%",
         maxHeight: middleSectionUnifiedHeight, // very hacky
@@ -110,6 +106,10 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+    },
+    deleteChat:{
+        height:50,
+        marginLeft:5
     },
     privateChatCard: {
         width: "100%",
@@ -182,11 +182,20 @@ export default function Chat(props) {
     const [rooms, setRooms] = useState([]);
     var img;
     const [activeChat, setActiveChat] = useState({
-        chatroomId: "",
-        name: "",
+        chatroomId: "123",
+        name: "123",
     });
     const [currentChatroomMessages, setCurrentChatroomMessages] = useState([]);
     const [receivedMessages, setReceivedMessages] = useState([]);
+    const [openinfo, setOpenInfo] = React.useState(false);
+
+    const handleClickOpenInfo = () => {
+        setOpenInfo(true);
+    };
+
+    const handleClickCloseInfo = () => {
+        setOpenInfo(false);
+    };
 
     const setChatrooms = () => {
         fetch(
@@ -450,11 +459,42 @@ export default function Chat(props) {
                             </div>
                         </Popover>
                     </div>
-                    <Button variant="contained" size="large" color="primary"
-                        onClick={() => logout()}
-                        disableElevation className={classes.logOut}>
-                        Logout
-                    </Button>
+                    <div className={classes.iconGroup}>
+                        <div>
+                            <AccountCircleIcon fontSize={"large"} className={classes.accountIcon}
+                                               onClick={handleClickOpenInfo}
+                            ></AccountCircleIcon>
+                            <Dialog open={openinfo} onClose={handleClickCloseInfo} aria-labelledby="form-dialog-title">
+                                <DialogTitle id="form-dialog-title">Information</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText>
+                                        Name:{username}
+                                    </DialogContentText>
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="name"
+                                        label="New Name:"
+                                        type="email"
+                                        fullWidth
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClickCloseInfo} color="primary">
+                                        Cancel
+                                    </Button>
+                                    <Button onClick={handleClose} color="primary">
+                                        Subscribe
+                                    </Button>
+                                </DialogActions>
+                            </Dialog>
+                        </div>
+                        <Button variant="contained" size="large" color="primary"
+                                onClick={() => logout()}
+                                disableElevation className={classes.logOut}>
+                            Logout
+                        </Button>
+                    </div>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -472,31 +512,21 @@ export default function Chat(props) {
                 </div>
                 <Divider />
 
-                <div className={classes.listContainer}>
-                    <TableContainer className={classes.iconContainer}>
-                        <Table stickyHeader>
-                            <AccountCircleIcon style={{ fontSize: 40 }}></AccountCircleIcon>
-                            <ChatIcon style={{ fontSize: 40 }}></ChatIcon>
-                            <ListIcon style={{ fontSize: 40 }}></ListIcon>
-                            <NotificationsIcon style={{ fontSize: 40 }}></NotificationsIcon>
-                        </Table>
-                    </TableContainer>
-
-                    <TableContainer className={classes.forTableContainerOfChats}>
-                        <Table stickyHeader>
-                            <List>
-                                {rooms.map((room) => (
-                                    <ListItem>
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            onClick={() => setActiveChat(room)}
-                                            className={
-                                                room.type === 0
-                                                    ? classes.privateChatCard
-                                                    : classes.groupChatCard
-                                            }
-                                        >
+                <TableContainer className={classes.forTableContainerOfChats}>
+                    <Table stickyHeader>
+                        <List>
+                            {rooms.map((room) => (
+                                <ListItem>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => setActiveChat(room)}
+                                        className={
+                                            room.type === 0
+                                                ? classes.privateChatCard
+                                                : classes.groupChatCard
+                                        }
+                                    >
                                             <Typography
                                                 variant="h5"
                                                 gutterBottom
@@ -505,12 +535,14 @@ export default function Chat(props) {
                                                 {room.name}
                                             </Typography>
                                         </Button>
+                                    <Button variant="outlined" color="primary" className={classes.deleteChat}>
+                                        Delete
+                                    </Button>
                                     </ListItem>
                                 ))}
                             </List>
                         </Table>
                     </TableContainer>
-                </div>
 
 
                 <div className={classes.panelsContainer}>

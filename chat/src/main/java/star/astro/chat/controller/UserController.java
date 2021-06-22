@@ -1,22 +1,23 @@
 package star.astro.chat.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import star.astro.chat.model.wrapper.chatroom.Chatroom;
 import star.astro.chat.service.UserService;
+import star.astro.chat.util.JWTUtil;
+import star.astro.chat.util.RedisUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final RedisUtil redisUtil;
 
     @PostMapping("/user")
     public JSONObject addUserByNickname(@RequestParam Map<String, Object> params) {
@@ -39,8 +40,12 @@ public class UserController {
             userService.userOnline(username);
             request.getSession().setAttribute("username", username);
         }
+        long currentTimeMillis = System.currentTimeMillis();
+        String token = JWTUtil.createToken(username, currentTimeMillis);
+        redisUtil.set(username, currentTimeMillis, 7 * 24 * 60 * 60);
         ret.put("success", granted);
         ret.put("username", username);
+        ret.put("token", token);
         ret.put("exc", "");
         return ret;
     }
@@ -80,6 +85,22 @@ public class UserController {
     public List<Chatroom> getUserChatrooms(@RequestParam Map<String, Object> params) {
         String username = (String) params.get("username");
         return userService.getUserChatrooms(username);
+    }
+
+    @PostMapping("/user/friend/delete")
+    public JSONObject deleteFriend(@RequestParam("user") String user, @RequestParam("friend") String friend){
+        JSONObject ret = new JSONObject();
+        userService.deleteFriend(user, friend);
+        ret.put("success", true);
+        return ret;
+    }
+
+    @PostMapping("/user/group/leave")
+    public JSONObject exitGroup(@RequestParam("user") String user, @RequestParam("groupId") String group){
+        JSONObject ret = new JSONObject();
+        userService.exitGroup(user, group);
+        ret.put("success", true);
+        return ret;
     }
 
 }
