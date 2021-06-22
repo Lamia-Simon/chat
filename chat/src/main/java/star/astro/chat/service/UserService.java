@@ -75,6 +75,12 @@ public class UserService {
         return true;
     }
 
+    public void changePassword(String username, String password) {
+        User user = findUserByName(username);
+        user.setPassword(password);
+        userRepository.save(user);
+    }
+
     public void userOnline(String username) {
         User user = userRepository.findUserByName(username);
         user.setOnline();

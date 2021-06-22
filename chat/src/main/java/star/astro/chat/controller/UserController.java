@@ -61,6 +61,17 @@ public class UserController {
         return ret;
     }
 
+    @PutMapping("/user/password")
+    public JSONObject changePassword(@RequestParam Map<String, Object> params) {
+        JSONObject ret = new JSONObject();
+        String username = (String) params.get("username");
+        String password = (String) params.get("password");
+        userService.changePassword(username, password);
+        ret.put("success", true);
+        ret.put("exc", "");
+        return ret;
+    }
+
     @PostMapping("/chatroom")
     public JSONObject createChatroom(@RequestParam Map<String, Object> params) {
         JSONObject ret = new JSONObject();
