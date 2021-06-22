@@ -231,40 +231,28 @@ export default function Chat(props) {
         }
     };
 
-    const deleteChat = (name,type) => {
-        if(type===1){
-            let formData = new FormData();
-            formData.append("user", username);
-            formData.append("group", name);
-            fetch(REACT_APP_SERVER_ADDRESS + "/user/group/leave", {
-                method: "POST",
-                body: formData,
-            }).then((response) => {
-                response.json().then((data) => {
-                    if (data.success === true) {
-                        setChatrooms();
-                    } else {
-                        console.log("nope");
-                    }
-                });
-            });
-        } else {
-            let formData = new FormData();
-            formData.append("user", username);
-            formData.append("friend", name);
-            fetch(REACT_APP_SERVER_ADDRESS + "/user/friend/delete", {
-                method: "POST",
-                body: formData,
-            }).then((response) => {
-                response.json().then((data) => {
-                    if (data.success === true) {
-                        setChatrooms();
-                    } else {
-                        console.log("nope");
-                    }
-                });
-            });
+    const deleteChat = (room) => {
+        let formData = new FormData();
+        formData.append("chatroomId", room.chatroomId);
+        let requestUrl;
+        if(room.type === 1) {
+            requestUrl = REACT_APP_SERVER_ADDRESS + "/user/group/leave"
         }
+        else {
+            requestUrl = REACT_APP_SERVER_ADDRESS + "/user/friend/delete"
+        }
+        fetch(requestUrl, {
+            method: "DELETE",
+            body: formData,
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.success === true) {
+                    setChatrooms();
+                } else {
+                    console.log("nope");
+                }
+            });
+        });
     };
 
     const setChatrooms = () => {
@@ -633,8 +621,7 @@ export default function Chat(props) {
                                         color="primary"
                                         className={classes.deleteChat}
                                         onClick={() => deleteChat(
-                                            room.name,
-                                            room.type
+                                            room
                                         )}
                                     >
                                         Delete

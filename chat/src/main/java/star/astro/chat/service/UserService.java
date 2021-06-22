@@ -161,12 +161,12 @@ public class UserService {
         return chatrooms;
     }
 
-    public void deleteFriend(String user, String friend){
-        friendLinkRepository.deleteByUsername0AndUsername1(user, friend);
+    public void deleteFriend(String chatroomId) {
+        friendLinkRepository.deleteById(chatroomId);
     }
 
-    public void exitGroup(String user, String id){
-        groupChatUserLinkRepository.deleteByChatroomIdAndUsername(id, user);
+    public void exitGroup(String chatroomId) {
+        groupChatUserLinkRepository.deleteByChatroomId(chatroomId);
     }
     public void addSticker(String user,String sticker){
         User u = userRepository.findUserByName(user);
