@@ -187,10 +187,7 @@ export default function Chat(props) {
     const [stickers, setStickers] = useState([]);
     var img;
     var sticker;
-    const [activeChat, setActiveChat] = useState({
-        chatroomId: "123",
-        name: "123",
-    });
+    const [activeChat, setActiveChat] = useState({});
     const [currentChatroomMessages, setCurrentChatroomMessages] = useState([]);
     const [receivedMessages, setReceivedMessages] = useState([]);
     const [openinfo, setOpenInfo] = React.useState(false);
@@ -247,9 +244,6 @@ export default function Chat(props) {
         }
     };
 
-
-
-
     const deleteChat = (room) => {
         let formData = new FormData();
         formData.append("chatroomId", room.chatroomId);
@@ -294,7 +288,12 @@ export default function Chat(props) {
             }
         ).then((response) => {
             response.json().then((data) => {
-                setStickers(data.stickers);
+                if(data.stickers == null) {
+                    setStickers([])
+                }
+                else {
+                    setStickers(data.stickers);
+                }
             });
         });
     };
